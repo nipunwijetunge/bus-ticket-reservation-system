@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Ticket Reservation API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .response-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .response-box.success {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .response-box.error {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .response-box pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .pricing-table th, .pricing-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .pricing-table th {
+            background: #f8f9fa;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .pricing-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Bus Ticket Reservation System</h1>
+        <p>REST API Testing Interface</p>
+    </div>
+
+    <!-- Check Availability Card -->
+    <div class="card">
+        <h2>Check Availability & Price</h2>
+        <form id="availabilityForm">
+            <div class="form-group">
+                <label for="avail_origin">Origin:</label>
+                <select id="avail_origin" required>
+                    <option value="">Select Origin</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="avail_destination">Destination:</label>
+                <select id="avail_destination" required>
+                    <option value="">Select Destination</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="avail_passengers">Number of Passengers:</label>
+                <input type="number" id="avail_passengers" min="1" max="40" value="2" required>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn-primary">Check Availability</button>
+                <button type="button" class="btn-secondary" onclick="clearAvailability()">Clear</button>
+            </div>
+        </form>
+        <div class="loading" id="availabilityLoading">
+            <div class="spinner"></div>
+            <p>Checking availability...</p>
+        </div>
+        <div id="availabilityResponse" class="response-box"></div>
+    </div>
+
+    <!-- Reserve Tickets Card -->
+    <div class="card">
+        <h2>Reserve Tickets</h2>
+        <form id="reserveForm">
+            <div class="form-group">
+                <label for="reserve_origin">Origin:</label>
+                <select id="reserve_origin" required>
+                    <option value="">Select Origin</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reserve_destination">Destination:</label>
+                <select id="reserve_destination" required>
+                    <option value="">Select Destination</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reserve_passengers">Number of Passengers:</label>
+                <input type="number" id="reserve_passengers" min="1" max="40" value="2" required>
+            </div>
+            <div class="form-group">
+                <label for="reserve_price">Total Price (Rs.):</label>
+                <input type="number" id="reserve_price" min="1" required readonly style="background:#f5f5f5; cursor:not-allowed;">
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn-primary">Reserve Tickets</button>
+                <button type="button" class="btn-secondary" onclick="clearReservation()">Clear</button>
+            </div>
+        </form>
+        <div class="loading" id="reserveLoading">
+            <div class="spinner"></div>
+            <p>Processing reservation...</p>
+        </div>
+        <div id="reserveResponse" class="response-box"></div>
+    </div>
+
+    <!-- Pricing Information Card -->
+    <div class="card">
+        <h2>Pricing Information</h2>
+        <table class="pricing-table">
+            <thead>
+            <tr>
+                <th>Route</th>
+                <th>Price per Seat (Rs.)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>A → B</td><td>50</td></tr>
+            <tr><td>A → C</td><td>100</td></tr>
+            <tr><td>A → D</td><td>150</td></tr>
+            <tr><td>B → C</td><td>50</td></tr>
+            <tr><td>B → D</td><td>100</td></tr>
+            <tr><td>C → D</td><td>50</td></tr>
+            </tbody>
+        </table>
+        <div class="info-box">
+            <strong>Note:</strong> Same prices apply for return journeys (e.g., B → A = Rs. 50)
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = window.location.origin + window.location.pathname.replace(/\/$/, '') + '/api';
+
+    // Check Availability Form
+    document.getElementById('availabilityForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const origin = document.getElementById('avail_origin').value;
+        const destination = document.getElementById('avail_destination').value;
+        const passengers = parseInt(document.getElementById('avail_passengers').value);
+
+        const loading = document.getElementById('availabilityLoading');
+        const responseBox = document.getElementById('availabilityResponse');
+
+        loading.classList.add('active');
+        responseBox.style.display = 'none';
+
+        try {
+            const response = await fetch(`${API_BASE}/availability`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ origin, destination, passengers })
+            });
+
+            const data = await response.json();
+
+            responseBox.className = 'response-box ' + (data.status === 200 ? 'success' : 'error');
+            responseBox.style.display = 'block';
+            responseBox.innerHTML = `
+                    <strong>${data.status === 200 ? '✓ Success' : '✗ Error'}</strong>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+        } catch (error) {
+            responseBox.className = 'response-box error';
+            responseBox.style.display = 'block';
+            responseBox.innerHTML = `
+                    <strong>✗ Error</strong>
+                    <pre>Failed to connect to API: ${error.message}</pre>
+                `;
+        } finally {
+            loading.classList.remove('active');
+        }
+    });
+
+    // Reserve Tickets Form
+    document.getElementById('reserveForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const origin = document.getElementById('reserve_origin').value;
+        const destination = document.getElementById('reserve_destination').value;
+        const passengers = parseInt(document.getElementById('reserve_passengers').value);
+        // const price = parseFloat(document.getElementById('reserve_price').value);
+
+        const loading = document.getElementById('reserveLoading');
+        const responseBox = document.getElementById('reserveResponse');
+
+        loading.classList.add('active');
+        responseBox.style.display = 'none';
+
+        try {
+            const response = await fetch(`${API_BASE}/reserve`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ origin, destination, passengers })
+            });
+
+            const data = await response.json();
+
+            responseBox.className = 'response-box ' + (data.status === 200 ? 'success' : 'error');
+            responseBox.style.display = 'block';
+            responseBox.innerHTML = `
+                    <strong>${data.status === 200 ? '✓ Success' : '✗ Error'}</strong>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+        } catch (error) {
+            responseBox.className = 'response-box error';
+            responseBox.style.display = 'block';
+            responseBox.innerHTML = `
+                    <strong>✗ Error</strong>
+                    <pre>Failed to connect to API: ${error.message}</pre>
+                `;
+        } finally {
+            loading.classList.remove('active');
+        }
+    });
+
+    // Pricing Map
+    const PRICING = {
+        'A-B': 50, 'B-A': 50,
+        'A-C': 100, 'C-A': 100,
+        'A-D': 150, 'D-A': 150,
+        'B-C': 50, 'C-B': 50,
+        'B-D': 100, 'D-B': 100,
+        'C-D': 50, 'D-C': 50
+    };
+
+    function updateTotalPrice() {
+        const origin = document.getElementById('reserve_origin').value;
+        const destination = document.getElementById('reserve_destination').value;
+        const passengers = parseInt(document.getElementById('reserve_passengers').value);
+        const priceField = document.getElementById('reserve_price');
+        if (origin && destination && origin !== destination && passengers > 0) {
+            const key = `${origin}-${destination}`;
+            const perSeat = PRICING[key];
+            if (perSeat) {
+                priceField.value = perSeat * passengers;
+            } else {
+                priceField.value = '';
+            }
+        } else {
+            priceField.value = '';
+        }
+    }
+
+    document.getElementById('reserve_origin').addEventListener('change', updateTotalPrice);
+    document.getElementById('reserve_destination').addEventListener('change', updateTotalPrice);
+    document.getElementById('reserve_passengers').addEventListener('input', updateTotalPrice);
+
+    function clearAvailability() {
+        document.getElementById('availabilityForm').reset();
+        document.getElementById('availabilityResponse').style.display = 'none';
+    }
+
+    function clearReservation() {
+        document.getElementById('reserveForm').reset();
+        document.getElementById('reserveResponse').style.display = 'none';
+        document.getElementById('reserve_price').value = '';
+    }
+</script>
+</body>
+</html>
