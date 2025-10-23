@@ -53,7 +53,7 @@ The server will start on the default port. Access the web interface at `http://l
 - **Error Response:** HTTP 400 (Bad Request)
 
 ### 3. Make Reservation
-- **URL:** `/api/reservation`
+- **URL:** `/api/reserve`
 - **Method:** POST
 - **Request Body:**
 ```json
