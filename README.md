@@ -18,9 +18,10 @@ This simple REST API does not use any frameworks like Spring Boot, JAX-RS or eve
 ## Running the Application
 
 1. Go to the directory where `BusTicketingSystem.war` is located.
-2. On Mac, Open terminal and run `java -xvf BusTicketingSystem.war` (Unarchive on Windows)
-3. Then run `java -cp "WEB-INF/classes:WEB-INF/lib/*" com.example.bus.MainServer`
-4. On Windows, `java -cp "WEB-INF\classes;WEB-INF\lib\*" com.example.bus.MainServer`
+2. On Mac, Open terminal and run `java -xvf BusTicketingSystem.war`
+3. On Windows, `jar -xvf BusTicketingSystem.war`
+4. Then run `java -cp "WEB-INF/classes:WEB-INF/lib/*" com.example.bus.MainServer`
+5. On Windows, `java -cp "WEB-INF\classes;WEB-INF\lib\*" com.example.bus.MainServer`
 
 
 The server will start on the default port. Access the web interface at `http://localhost:8080`
