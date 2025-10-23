@@ -32,7 +32,7 @@ The server will start on the default port. Access the web interface at `http://l
 - **GUI is accessible at:** `http://localhost:8080`
 
 ### 2. Check Availability
-- **URL:** `/availability`
+- **URL:** `/api/availability`
 - **Method:** POST
 - **Request Body:**
 ```json
@@ -53,7 +53,7 @@ The server will start on the default port. Access the web interface at `http://l
 - **Error Response:** HTTP 400 (Bad Request)
 
 ### 3. Make Reservation
-- **URL:** `/reservation`
+- **URL:** `/api/reservation`
 - **Method:** POST
 - **Request Body:**
 ```json
