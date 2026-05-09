@@ -2,20 +2,23 @@ package com.example.bus.service;
 
 import com.example.bus.dto.BaseResponse;
 import com.example.bus.model.Reservation;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled("Tests are disabled due to unpredictable seat changes in sequential test cases")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BusServiceTest {
     private BusService busService;
 
     @BeforeEach
-     void setUp() {
+    void setUp() throws Exception {
+        Field instance = BusService.class.getDeclaredField("busService");
+        instance.setAccessible(true);
+        instance.set(null, null);
         busService = BusService.getInstance();
     }
 
@@ -41,12 +44,10 @@ class BusServiceTest {
     }
 
     @Test
-    void shouldReturnZeroPriceForInvalidRoute() {
+    void shouldReturnBadRequestForInvalidRoute() {
         BaseResponse response = busService.checkAvailability("A", "E", 1);
 
-        assertEquals(200, response.getStatus());
-        Map<String, Object> data = (Map<String, Object>) response.getData();
-        assertEquals(0.00, data.get("totalPrice"));
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -72,7 +73,6 @@ class BusServiceTest {
     }
 
     @Test
-    @Order(Integer.MAX_VALUE)
     void shouldHandleReservationWhenNotEnoughSeatsAvailable() {
         // First reserve most seats
         busService.reserve("A", "B", 20);

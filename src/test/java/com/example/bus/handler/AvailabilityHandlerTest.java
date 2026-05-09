@@ -81,8 +81,6 @@ class AvailabilityHandlerTest {
 
         when(exchange.getRequestMethod()).thenReturn("POST");
         when(exchange.getRequestBody()).thenReturn(inputStream);
-        when(exchange.getResponseBody()).thenReturn(outputStream);
-        when(exchange.getResponseHeaders()).thenReturn(headers);
 
         handler.handle(exchange);
 

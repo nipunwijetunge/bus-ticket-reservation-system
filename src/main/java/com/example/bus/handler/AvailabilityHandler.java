@@ -29,8 +29,8 @@ public class AvailabilityHandler implements HttpHandler {
                 return;
             }
 
-            String origin = body.get("origin") != null ? body.get("origin").toString() : "";
-            String destination = body.get("destination") != null ? body.get("destination").toString() : "";
+            String origin = body.get("origin") != null ? body.get("origin").toString() : null;
+            String destination = body.get("destination") != null ? body.get("destination").toString() : null;
             int passengers = body.get("passengers") != null ? ((Double) body.get("passengers")).intValue() : 0;
 
             if (origin == null || destination == null) {
